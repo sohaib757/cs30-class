@@ -23,19 +23,6 @@ function draw() {
   showCorrectLight();
 }
 
-function drawOutlineOfLights() {
-  //box
-  rectMode(CENTER);
-  fill(0);
-  rect(width/2, height/2, 75, 200, 10);
-
-  //lights
-  fill(255);
-  ellipse(width/2, height/2 - 65, 50, 50); //top
-  ellipse(width/2, height/2, 50, 50); //middle
-  ellipse(width/2, height/2 + 65, 50, 50); //bottom
-}
-
 function updateLightState() {
   if (color === "red" && millis() > lastSwitched + redDuration) {
     color = "green";
@@ -49,6 +36,19 @@ function updateLightState() {
     color = "red";
     lastSwitched = millis();
   }
+}
+
+function drawOutlineOfLights() {
+  //box
+  rectMode(CENTER);
+  fill(0);
+  rect(width/2, height/2, 75, 200, 10);
+
+  //lights
+  fill(255);
+  ellipse(width/2, height/2 - 65, 50, 50); //top
+  ellipse(width/2, height/2, 50, 50); //middle
+  ellipse(width/2, height/2 + 65, 50, 50); //bottom
 }
 
 function showCorrectLight() {
