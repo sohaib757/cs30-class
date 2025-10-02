@@ -1,10 +1,3 @@
-// Project Title
-// Your Name
-// Date
-//
-// Extra for Experts:
-// - describe what you did to take this project "above and beyond"
-
 let whitePawnImg;
 let blackPawnImg;
 let size;
@@ -23,12 +16,13 @@ let changePawnB = 0;
 let changeCircleW = 0;
 let changeCircleB = 0;
 let blackCircleY= 2.5;
+let timeW = 60000;
+let timeB = 60000;
 
 function preload() {
   whitePawnImg = loadImage("whitepawn.png");
   blackPawnImg = loadImage("blackpawn.png");
 }
-
 function setup() {
   if (windowWidth > windowHeight) {
     createCanvas(windowHeight, windowHeight);
@@ -47,6 +41,8 @@ function draw() {
   movePawns();
   promotion();
   keyPressed();
+  showTimer();
+  setInterval(timer, 1000);
 }
 
 function windowResized() {
@@ -167,12 +163,12 @@ function mouseClicked() {
 }
 
 function promotion() {
-  if (changePawnW === 606) {
+  if (changePawnW === 876) {
     canMoveB = false;
     fill("grey");
     rect(2 * size, 0, size * 3, size);
     if (mouseX <= 3 * size && mouseX >= 2 * size && mouseY <= size) {
-      circle(50,50,50);
+      circle(size/2,size/2,50);
     }
   }
 }
@@ -216,4 +212,20 @@ function keyPressed() {
   showPawns();
   movePawns();
   promotion();
+}
+
+function showTimer() {
+  fill("green");
+  rect(width-width/15, height/900, width/8, height/30);
+  fill("red");
+  text(timeW, width-width/20, height/50);
+}
+
+function timer() {
+  if(whitePawnOneTurn) {
+    timeW --;
+  }
+  if (timeW < 0) {
+    
+  }
 }
