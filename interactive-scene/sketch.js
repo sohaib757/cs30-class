@@ -16,8 +16,8 @@ let changePawnB = 0;
 let changeCircleW = 0;
 let changeCircleB = 0;
 let blackCircleY= 2.5;
-let timeW = 60000;
-let timeB = 60000;
+let timeW = 5;
+let timeB = 1;
 
 function preload() {
   whitePawnImg = loadImage("whitepawn.png");
@@ -31,6 +31,7 @@ function setup() {
     createCanvas(windowWidth, windowWidth);
   }
   size = width/8;
+  setInterval(timer, 1000);
 }
 
 function draw() {
@@ -42,7 +43,8 @@ function draw() {
   promotion();
   keyPressed();
   showTimer();
-  setInterval(timer, 1000);
+  gameOver();
+  textSize(width/40);
 }
 
 function windowResized() {
@@ -163,7 +165,7 @@ function mouseClicked() {
 }
 
 function promotion() {
-  if (changePawnW === 876) {
+  if (changePawnW === 6 * size) {
     canMoveB = false;
     fill("grey");
     rect(2 * size, 0, size * 3, size);
@@ -171,6 +173,13 @@ function promotion() {
       circle(size/2,size/2,50);
     }
   }
+  else if (changePawnB === 6 * size) {
+    fill("grey");
+    rect(2 * size, 0, size * 3, size);
+    if (mouseX <= 3 * size && mouseX >= 2 * size && mouseY <= size) {
+      circle(size/2,size/2,50);
+    }
+  }  
 }
 
 function keyPressed() {
@@ -218,14 +227,35 @@ function showTimer() {
   fill("green");
   rect(width-width/15, height/900, width/8, height/30);
   fill("red");
-  text(timeW, width-width/20, height/50);
+  text(timeW, width-width/25, height/40);
+  fill("green");
+  rect(width - width/15, height - size/4, width/8, height/30);
+  fill("red");
+  text(timeB, width-width/25, height - height/150);
 }
 
 function timer() {
   if(whitePawnOneTurn) {
     timeW --;
   }
-  if (timeW < 0) {
-    
+  if(blackPawnOneTurn) {
+    timeB --;
+  }
+}
+
+function gameOver() {
+  if (timeW <= 0) {
+    timeW = 0;
+    fill("blue");
+    rect(width/2 - size, height/2 - size, 2*size, size);
+    fill(255,255,0);
+    text("Black wins on time", width/2- size/1.2, height/2 - size/1.7, size*3, size);
+  }
+  if (timeB <= 0) {
+    timeB = 0;
+    fill("blue");
+    rect(width/2 - size, height/2 - size, 2*size, size);
+    fill(255,255,0);
+    text("White wins on time", width/2- size/1.2, height/2 - size/1.7, size*3, size);
   }
 }
