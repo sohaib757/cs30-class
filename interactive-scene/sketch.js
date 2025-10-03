@@ -1,3 +1,11 @@
+// Moving Pawns
+// Sohaib Hassan
+// October 3rd, 2025
+//
+// Extra for Experts:
+// - Created a functioning timer using the setInterval() function
+// - Added text that changes size based on the screen size.
+
 let whitePawnImg;
 let blackPawnImg;
 let size;
@@ -16,8 +24,8 @@ let changePawnB = 0;
 let changeCircleW = 0;
 let changeCircleB = 0;
 let blackCircleY= 2.5;
-let timeW = 5;
-let timeB = 1;
+let timeW = 30;
+let timeB = 30;
 
 function preload() {
   whitePawnImg = loadImage("whitepawn.png");
@@ -235,27 +243,48 @@ function showTimer() {
 }
 
 function timer() {
-  if(whitePawnOneTurn) {
+  if((whitePawnOneTurn || changePawnW === 6 * size) && changePawnB !== 6 * size && timeW >= 0){
     timeW --;
   }
-  if(blackPawnOneTurn) {
+  if((blackPawnOneTurn|| changePawnB === 6 * size) && changePawnW !== 6 * size && timeB >= 0) {
     timeB --;
   }
 }
 
 function gameOver() {
-  if (timeW <= 0) {
-    timeW = 0;
+  if (timeW < 0) {
     fill("blue");
     rect(width/2 - size, height/2 - size, 2*size, size);
     fill(255,255,0);
     text("Black wins on time", width/2- size/1.2, height/2 - size/1.7, size*3, size);
+    canMoveW = false;
+    canMoveB = false;
   }
-  if (timeB <= 0) {
-    timeB = 0;
+  if (timeB < 0) {
     fill("blue");
     rect(width/2 - size, height/2 - size, 2*size, size);
     fill(255,255,0);
     text("White wins on time", width/2- size/1.2, height/2 - size/1.7, size*3, size);
+    canMoveW = false;
+    canMoveB = false;
+  }
+  if (keyIsDown(82) && (timeB < 0 || timeW < 0)) {
+    whitePawnOneClicked = false;
+    blackPawnOneClicked = false;
+    whitePawnOneForward = 0;
+    blackPawnOneForward = 0;
+    whitePawnOneTurn = true;
+    firstMove = true;
+    blackPawnOneTurn = false;
+    canMoveW = false;
+    canMoveB = false;
+    whiteCircleY = 4.5;
+    changePawnW = 0;
+    changePawnB = 0;
+    changeCircleW = 0;
+    changeCircleB = 0;
+    blackCircleY= 2.5;
+    timeW = 30;
+    timeB = 30;
   }
 }
