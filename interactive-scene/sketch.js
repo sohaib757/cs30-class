@@ -51,7 +51,7 @@ function preload() {
   whitePawnImg = loadImage("whitepawn.png");
   blackPawnImg = loadImage("blackpawn.png");
   whiteQueenImg = loadImage("whitequeen.jpg");
-  blackQueenImg = loadImage("blackqueen.png")
+  blackQueenImg = loadImage("blackqueen.png");
 }
 
 // Sets window size depending on the size of the user's screen and controls timer
