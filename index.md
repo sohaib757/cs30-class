@@ -4,6 +4,7 @@
 - [Traffic lights](traffic-lights)
 - [Bouncing balls](bouncing-balls)
 - [Generative Art](generative-art)
+- [Perlin Noise](perlin-noise)
 
 ## Assignments
 - [Interactive Scene](interactive-scene)

@@ -73,7 +73,11 @@ function setup() {
 function draw() {
   background(220);
   showBoard();
-  showPawns();
+  for (let i = 0; i < 8; i++) {
+    x = i * size - size/2;
+    y = size*6;
+    showPawns(x,y);
+  }
   noStroke();
   movePawns();
   promotion();
@@ -114,14 +118,16 @@ function showBoard() {
 }
 
 // Displays the pawn images in their respective positions
-function showPawns() {
+function showPawns(_x, _y) {
   let whitePawn = {
-    whiteImg: image(whitePawnImg, size/2 - size, 6 * size - whitePawnForward, size * 2, size),
+    x: _x,
+    y: _y,
+    whiteImg: image(whitePawnImg, _x, _y - whitePawnForward, size * 2, size),
     changeCircleW: 0,
     whiteCircleY: 4.5,
     whitePawnForward: 0,
-
-  }
+  };
+  whitePawnsArray.push(whitePawn);
   image(blackPawnImg, size/2, size + blackPawnForward, size *2, size);
 }
 
