@@ -120,9 +120,11 @@ function addPawns() {
   let whitePawn = {
     x: numberOfPawns * size - size/2,
     y: size*6,
+    changePawnW: 0,
     changeCircleW: 0,
     whiteCircleY: 4.5,
     whitePawnForward: 0,
+    numberOfPawns: numberOfPawns++,
   };
   whitePawnsArray.push(whitePawn);
   image(blackPawnImg, size/2, size + blackPawnForward, size *2, size);
@@ -132,7 +134,6 @@ function showPawns() {
   for (let whitePawn of whitePawnsArray) {
     image(whitePawnImg, whitePawn.x, whitePawn.y - whitePawn.whitePawnForward, size * 2, size);   
   }
-  numberOfPawns += 1;
 }
 
 // Controls whether or not pawns can be moved and the positions of the circles
@@ -142,8 +143,8 @@ function movePawns() {
   for (let whitePawn of whitePawnsArray) {
     if (whitePawnClicked && firstMove) {
       fill("grey");
-      circle(size/2, size * whiteCircleY, size/4);
-      circle(size/2, size * (whiteCircleY + 1), size/4);
+      circle(whitePawn.numberOfPawns * size + size/2, size * whiteCircleY, size/4);
+      circle(whitePawn.numberOfPawns * size + size/2, size * (whiteCircleY + 1), size/4);
       canMoveW = true;
     }
     
@@ -155,7 +156,7 @@ function movePawns() {
     // White pawn can only move 1 square after first move
     else if (whitePawnClicked && !firstMove) {
       fill("grey");
-      circle(size/2, 6 * size - changePawnW - changeCircleW - size/2, size/4);
+      circle(whitePawn.numberOfPawns * size + size/2, 6 * size - whitePawn.changePawnW - whitePawn.changeCircleW - size/2, size/4);
       canMoveW = true;
     }
     
@@ -186,7 +187,7 @@ function mouseClicked() {
   
   // Allows white pawn to move only when it is white turn and when the mouse is on the pawn
   for (let whitePawn of whitePawnsArray) {
-    if (whitePawnTurn && mouseX < whitePawn.x + 2 * size && mouseY > whitePawn.y - changePawnW && mouseY < whitePawn.y + size - changePawnW) {
+    if (whitePawnTurn && mouseX < whitePawn.x + 2 * size && mouseY > whitePawn.y - whitePawn.changePawnW && mouseY < whitePawn.y + size - whitePawn.changePawnW) {
       whitePawnClicked = true;
     }
     else {
@@ -194,25 +195,25 @@ function mouseClicked() {
     }
     
     // White pawn move 1 square forward
-    if (canMoveW && whitePawnTurn && mouseX < whitePawn.x + 2 * size && mouseY < whitePawn.y - changePawnW && mouseY > whitePawn.y - size - changePawnW) {
+    if (canMoveW && whitePawnTurn && mouseX < whitePawn.x + 2 * size && mouseY < whitePawn.y - whitePawn.changePawnW && mouseY > whitePawn.y - size - whitePawn.changePawnW) {
       whitePawn.whitePawnForward += size;
       whitePawnTurn = false;
       blackPawnTurn = true;
       canMoveW = false;
       canMoveB = true;
-      changePawnW += size;
-      changeCircleW += 1;
+      whitePawn.changePawnW += size;
+      whitePawn.changeCircleW += 1;
     }
     
     // White pawn move 2 squares forward only when it's the first move
-    else if (canMoveW && firstMove && whitePawnTurn && mouseX <  size && mouseY < size * 5 - changePawnW && mouseY > size * 4 - changePawnW) {
+    else if (canMoveW && firstMove && whitePawnTurn && mouseX > whitePawn.x - size/2 && mouseX < whitePawn.x + size/2 && mouseY < whitePawn.y - whitePawn.changePawnW * 2 - whitePawn.changePawnW && mouseY > whitePawn.y - size * 2 - whitePawn.changePawnW) {
       whitePawn.whitePawnForward += size * 2;
       whitePawnTurn = false;
       blackPawnTurn = true;
       canMoveB = true;
       canMoveW = false;
-      changePawnW += 2 * size;
-      changeCircleW += 1;
+      whitePawn.changePawnW += 2 * size;
+      whitePawn.changeCircleW += 1;
     }
     
     // Allows black pawn to move only when it is black turn and when the mouse is on the pawn
