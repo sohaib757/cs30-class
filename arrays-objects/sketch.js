@@ -143,8 +143,8 @@ function movePawns() {
   for (let whitePawn of whitePawnsArray) {
     if (whitePawnClicked && firstMove) {
       fill("grey");
-      circle(whitePawn.numberOfPawns * size + size/2, size * whiteCircleY, size/4);
-      circle(whitePawn.numberOfPawns * size + size/2, size * (whiteCircleY + 1), size/4);
+      circle(whitePawn.x + size, size * whiteCircleY, size/4);
+      circle(whitePawn.x + size, size * (whiteCircleY + 1), size/4);
       canMoveW = true;
     }
     
@@ -156,7 +156,7 @@ function movePawns() {
     // White pawn can only move 1 square after first move
     else if (whitePawnClicked && !firstMove) {
       fill("grey");
-      circle(whitePawn.numberOfPawns * size + size/2, 6 * size - whitePawn.changePawnW - whitePawn.changeCircleW - size/2, size/4);
+      circle(whitePawn.x + size, 6 * size - whitePawn.changePawnW - whitePawn.changeCircleW - size/2, size/4);
       canMoveW = true;
     }
     
@@ -195,7 +195,7 @@ function mouseClicked() {
     }
     
     // White pawn move 1 square forward
-    if (canMoveW && whitePawnTurn && mouseX < whitePawn.x + 2 * size && mouseY < whitePawn.y - whitePawn.changePawnW && mouseY > whitePawn.y - size - whitePawn.changePawnW) {
+    if (canMoveW && whitePawnTurn && mouseX < whitePawn.x + 1.5 * size && mouseX > whitePawn.x - 1.5 * size && mouseY < whitePawn.y - whitePawn.changePawnW && mouseY > whitePawn.y - size - whitePawn.changePawnW) {
       whitePawn.whitePawnForward += size;
       whitePawnTurn = false;
       blackPawnTurn = true;
@@ -206,7 +206,7 @@ function mouseClicked() {
     }
     
     // White pawn move 2 squares forward only when it's the first move
-    else if (canMoveW && firstMove && whitePawnTurn && mouseX > whitePawn.x - size/2 && mouseX < whitePawn.x + size/2 && mouseY < whitePawn.y - whitePawn.changePawnW * 2 - whitePawn.changePawnW && mouseY > whitePawn.y - size * 2 - whitePawn.changePawnW) {
+    else if (canMoveW && firstMove && whitePawnTurn && mouseX > whitePawn.x - 1.5 * size && mouseX < whitePawn.x + 1.5 * size && mouseY < whitePawn.y - whitePawn.changePawnW * 2 - whitePawn.changePawnW && mouseY > whitePawn.y - size * 2 - whitePawn.changePawnW) {
       whitePawn.whitePawnForward += size * 2;
       whitePawnTurn = false;
       blackPawnTurn = true;
