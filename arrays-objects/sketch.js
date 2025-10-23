@@ -79,7 +79,7 @@ function draw() {
   noStroke();
   movePawns();
   promotion();
-  //keyPressed();
+  boardColour();
   showTimer();
   gameOver();
   // Scale text size according to canvas size
@@ -125,16 +125,18 @@ function addPawns() {
     whiteCircleY: 4.5,
     whitePawnForward: 0,
     whitePawnClicked: false,
+    canMoveW: false,
+    firstMoveW: true
   };
   whitePawnsArray.push(whitePawn);
-  numberOfPawns: numberOfPawns++,
-  image(blackPawnImg, size/2, size + blackPawnForward, size *2, size);
+  numberOfPawns++;
 }
 
 function showPawns() {
   for (let whitePawn of whitePawnsArray) {
     image(whitePawnImg, whitePawn.x, whitePawn.y - whitePawn.whitePawnForward, size * 2, size);   
   }
+  image(blackPawnImg, size/2, size + blackPawnForward, size *2, size);
 }
 
 // Controls whether or not pawns can be moved and the positions of the circles
@@ -142,23 +144,23 @@ function movePawns() {
   
   // Check if white pawn is in first move to determine how many squares it can move
   for (let whitePawn of whitePawnsArray) {
-    if (whitePawn.whitePawnClicked && firstMove) {
+    if (whitePawn.whitePawnClicked && whitePawn.firstMoveW) {
       fill("grey");
       circle(whitePawn.x + size, size * whiteCircleY, size/4);
       circle(whitePawn.x + size, size * (whiteCircleY + 1), size/4);
-      canMoveW = true;
+      whitePawn.canMoveW = true;
     }
     
     // Make sure white pawn can only move when clicked
     if (!whitePawn.whitePawnClicked) {
-      canMoveW = false;
+      whitePawn.canMoveW = false;
     }
     
     // White pawn can only move 1 square after first move
-    else if (whitePawn.whitePawnClicked && !firstMove) {
+    else if (whitePawn.whitePawnClicked && !whitePawn.firstMoveW) {
       fill("grey");
       circle(whitePawn.x + size, 6 * size - whitePawn.changePawnW - whitePawn.changeCircleW - size/2, size/4);
-      canMoveW = true;
+      whitePawn.canMoveW = true;
     }
     
     // Check if black pawn is in first move to determine how many squares it can move
@@ -196,31 +198,32 @@ function mouseClicked() {
     }
     
     // White pawn move 1 square forward
-    if (canMoveW && whitePawnTurn && mouseX < whitePawn.x + 1.5 * size && mouseX > whitePawn.x + size/2 && mouseY < whitePawn.y - whitePawn.changePawnW && mouseY > whitePawn.y - size - whitePawn.changePawnW) {
+    if (whitePawn.canMoveW && whitePawnTurn && mouseX < whitePawn.x + 1.5 * size && mouseX > whitePawn.x + size/2 && mouseY < whitePawn.y - whitePawn.changePawnW && mouseY > whitePawn.y - size - whitePawn.changePawnW) {
       whitePawn.whitePawnForward += size;
       whitePawnTurn = false;
       blackPawnTurn = true;
-      canMoveW = false;
+      whitePawn.canMoveW = false;
       canMoveB = true;
       whitePawn.changePawnW += size;
       whitePawn.changeCircleW += 1;
+      whitePawn.firstMoveW = false;
     }
     
     // White pawn move 2 squares forward only when it's the first move
-    else if (canMoveW && firstMove && whitePawnTurn && mouseX > whitePawn.x - 1.5 * size && mouseX < whitePawn.x + 1.5 * size && mouseY < whitePawn.y - whitePawn.changePawnW * 2 && mouseY > whitePawn.y - 2 * size) {
+    else if (whitePawn.canMoveW && whitePawn.firstMoveW && whitePawnTurn && mouseX > whitePawn.x + size/2 && mouseX < whitePawn.x + 1.5 * size && mouseY < whitePawn.y - whitePawn.changePawnW * 2 && mouseY > whitePawn.y - 2 * size) {
       whitePawn.whitePawnForward += size * 2;
       whitePawnTurn = false;
       blackPawnTurn = true;
       canMoveB = true;
-      canMoveW = false;
+      whitePawn.canMoveW = false;
       whitePawn.changePawnW += 2 * size;
       whitePawn.changeCircleW += 1;
+      whitePawn.firstMoveW = false;
     }
     
     // Allows black pawn to move only when it is black turn and when the mouse is on the pawn
     if (blackPawnTurn && mouseX < 2 * size  && mouseX > size && mouseY > size + changePawnB && mouseY < 2 * size + changePawnB) {
       blackPawnClicked = true;
-      firstMoveB = true;
     }
     else {
       blackPawnClicked = false;
@@ -315,7 +318,7 @@ function promotion() {
 }
 
 // Can be used to change the colour of the chess board
-function keyPressed() {
+function boardColour() {
   
   // Tan/brown board if user presses q
   if (key === 'q') {
@@ -424,7 +427,7 @@ function gameOver() {
     whitePawnForward = 0;
     blackPawnForward = 0;
     whitePawnTurn = true;
-    firstMove = true;
+    firstMoveW= true;
     blackPawnTurn = false;
     canMoveW = false;
     canMoveB = false;
