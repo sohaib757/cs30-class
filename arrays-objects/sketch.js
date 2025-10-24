@@ -3,7 +3,7 @@
 // October 10, 2025
 //
 // Extra for Experts:
-// - describe what you did to take this project "above and beyond"
+// - added sound effects and ambience
 
 let whitePawnsArray = [];
 let blackPawnsArray = [];
