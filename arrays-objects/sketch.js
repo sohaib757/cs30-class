@@ -1,12 +1,14 @@
-// Project Title
+// Objects and Arrays
 // Sohaib Hassan
-// October 10, 2025
+// October 26, 2025
 //
 // Extra for Experts:
 // - added sound effects and ambience
 
+// Pawn arrays
 let whitePawnsArray = [];
 let blackPawnsArray = [];
+
 // Global Variables 
 
 // Chess piece images
