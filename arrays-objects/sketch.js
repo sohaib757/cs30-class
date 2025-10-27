@@ -19,30 +19,13 @@ let blackQueenImg;
 let size;
 
 // State variables
-let whitePawnClicked = false;
-let blackPawnClicked = false;
 let whitePawnTurn = true;
 let firstMove = true;
 let blackPawnTurn = false;
-let canMoveW = false;
-let canMoveB = false;
-let whitePromoting = false;
-let blackPromoting = false;
-let whitePromoted = false;
-let blackPromoted = false;
 
-// Adjust pawn postion
-let whitePawnForward = 0;
-let blackPawnForward = 0;
-let changePawnW = 0;
-let changePawnB = 0;
-let numberOfPawns = 0;
-
-// Adjust circle position
-let changeCircleW = 0;
-let changeCircleB = 0;
-let blackCircleY= 2.5;
-let whiteCircleY = 4.5;
+// Set the number of pawns to equal zero
+let numberOfPawnsW = 0;
+let numberOfPawnsB = 0;
 
 // Time for both colours in seconds
 let timeW = 30;
@@ -54,6 +37,8 @@ function preload() {
   blackPawnImg = loadImage("blackpawn.png");
   whiteQueenImg = loadImage("whitequeen.jpg");
   blackQueenImg = loadImage("blackqueen.png");
+  pawnMoved = createAudio("move-self.mp3");
+  ambience = createAudio("ambient-noise.mp3");
 }
 
 // Sets window size depending on the size of the user's screen and controls timer
@@ -68,13 +53,20 @@ function setup() {
   
   // Start timer that runs every one second
   setInterval(timer, 1000);
+
+  // Adds no more than 8 pawns to the board
+  for (let x = 0; x < 8; x ++) {
+  addPawns();
+  }
+
+  // Sets the volume of background ambience
+  ambience.volume(0.2);
 }
 
 // Calls the functions needed for the experience to run
 function draw() {
   background(220);
   showBoard();
-  addPawns();
   showPawns();
   noStroke();
   movePawns();
@@ -115,10 +107,10 @@ function showBoard() {
   }
 }
 
-// Displays the pawn images in their respective positions
+// Creates each pawn as an object and pushes them to their respective arrays
 function addPawns() {
   let whitePawn = {
-    x: numberOfPawns * size - size/2,
+    x: numberOfPawnsW * size - size/2,
     y: size*6,
     changePawnW: 0,
     changeCircleW: 0,
@@ -126,17 +118,38 @@ function addPawns() {
     whitePawnForward: 0,
     whitePawnClicked: false,
     canMoveW: false,
-    firstMoveW: true
+    firstMove: true,
+    whitePromoting: false,
+    whitePromoted: false,
   };
   whitePawnsArray.push(whitePawn);
-  numberOfPawns++;
+  numberOfPawnsW ++;
+
+let blackPawn = {
+    x: numberOfPawnsB * size - size/2,
+    y: size,
+    changePawnB: 0,
+    changeCircleB: 0,
+    blackCircleY: 2.5,
+    blackPawnForward: 0,
+    blackPawnClicked: false,
+    canMoveB: false,
+    firstMove: true,
+    blackPromoting: false,
+    blackPromoted: false,
+  };
+  blackPawnsArray.push(blackPawn);
+  numberOfPawnsB ++;
 }
 
+// Displays the pawn images in their respective positions
 function showPawns() {
   for (let whitePawn of whitePawnsArray) {
     image(whitePawnImg, whitePawn.x, whitePawn.y - whitePawn.whitePawnForward, size * 2, size);   
   }
-  image(blackPawnImg, size/2, size + blackPawnForward, size *2, size);
+  for (let blackPawn of blackPawnsArray) {
+    image(blackPawnImg, blackPawn.x, blackPawn.y + blackPawn.blackPawnForward, size *2, size);
+  }
 }
 
 // Controls whether or not pawns can be moved and the positions of the circles
@@ -144,10 +157,10 @@ function movePawns() {
   
   // Check if white pawn is in first move to determine how many squares it can move
   for (let whitePawn of whitePawnsArray) {
-    if (whitePawn.whitePawnClicked && whitePawn.firstMoveW) {
+    if (whitePawn.whitePawnClicked && whitePawn.firstMove) {
       fill("grey");
-      circle(whitePawn.x + size, size * whiteCircleY, size/4);
-      circle(whitePawn.x + size, size * (whiteCircleY + 1), size/4);
+      circle(whitePawn.x + size, size * whitePawn.whiteCircleY, size/4);
+      circle(whitePawn.x + size, size * (whitePawn.whiteCircleY + 1), size/4);
       whitePawn.canMoveW = true;
     }
     
@@ -157,36 +170,40 @@ function movePawns() {
     }
     
     // White pawn can only move 1 square after first move
-    else if (whitePawn.whitePawnClicked && !whitePawn.firstMoveW) {
+    else if (whitePawn.whitePawnClicked && !whitePawn.firstMove) {
       fill("grey");
       circle(whitePawn.x + size, 6 * size - whitePawn.changePawnW - whitePawn.changeCircleW - size/2, size/4);
       whitePawn.canMoveW = true;
     }
-    
+  }
     // Check if black pawn is in first move to determine how many squares it can move
-    if (blackPawnClicked && firstMove) {
+  for (let blackPawn of blackPawnsArray) {
+    if (blackPawn.blackPawnClicked && blackPawn.firstMove) {
       fill("grey");
-      circle(size * 1.5, size * blackCircleY, size/4);
-      circle(size * 1.5, size * (blackCircleY + 1), size/4);
-      canMoveB = true;
+      circle(blackPawn.x + size, size * blackPawn.blackCircleY, size/4);
+      circle(blackPawn.x + size, size * (blackPawn.blackCircleY + 1), size/4);
+      blackPawn.canMoveB = true;
     }
     
     // Make sure black pawn can only move when clicked
-    if (!blackPawnClicked) {
-      canMoveB = false;
+    if (!blackPawn.blackPawnClicked) {
+      blackPawn.canMoveB = false;
     }
     
     // Black pawn can only move 1 square after first move
-    else if (blackPawnClicked && !firstMove) {
+    else if (blackPawn.blackPawnClicked && !blackPawn.firstMove) {
       fill("grey");
-      circle(size * 1.5, 2 * size + changePawnB + changeCircleB + size/2, size/4);
-      canMoveB = true;
+      circle(blackPawn.x + size, 2 * size + blackPawn.changePawnB + blackPawn.changeCircleB + size/2, size/4);
+      blackPawn.canMoveB = true;
     }
   }
 }
 
 // Controls the movement of the pawns based on mouse position and states
 function mouseClicked() {
+
+  // Loops the background ambience after the mouse is clicked
+  ambience.loop();
   
   // Allows white pawn to move only when it is white turn and when the mouse is on the pawn
   for (let whitePawn of whitePawnsArray) {
@@ -202,118 +219,118 @@ function mouseClicked() {
       whitePawn.whitePawnForward += size;
       whitePawnTurn = false;
       blackPawnTurn = true;
-      whitePawn.canMoveW = false;
-      canMoveB = true;
       whitePawn.changePawnW += size;
       whitePawn.changeCircleW += 1;
-      whitePawn.firstMoveW = false;
+      whitePawn.firstMove = false;
+      pawnMoved.play();
     }
     
     // White pawn move 2 squares forward only when it's the first move
-    else if (whitePawn.canMoveW && whitePawn.firstMoveW && whitePawnTurn && mouseX > whitePawn.x + size/2 && mouseX < whitePawn.x + 1.5 * size && mouseY < whitePawn.y - whitePawn.changePawnW * 2 && mouseY > whitePawn.y - 2 * size) {
+    else if (whitePawn.canMoveW && whitePawn.firstMove && whitePawnTurn && mouseX > whitePawn.x + size/2 && mouseX < whitePawn.x + 1.5 * size && mouseY < whitePawn.y - whitePawn.changePawnW * 2 && mouseY > whitePawn.y - 2 * size) {
       whitePawn.whitePawnForward += size * 2;
       whitePawnTurn = false;
       blackPawnTurn = true;
-      canMoveB = true;
-      whitePawn.canMoveW = false;
       whitePawn.changePawnW += 2 * size;
       whitePawn.changeCircleW += 1;
-      whitePawn.firstMoveW = false;
+      whitePawn.firstMove = false;
+      pawnMoved.play();
     }
+  }
     
-    // Allows black pawn to move only when it is black turn and when the mouse is on the pawn
-    if (blackPawnTurn && mouseX < 2 * size  && mouseX > size && mouseY > size + changePawnB && mouseY < 2 * size + changePawnB) {
-      blackPawnClicked = true;
+  // Allows black pawn to move only when it is black turn and when the mouse is on the pawn
+  for (let blackPawn of blackPawnsArray) {
+    if (blackPawnTurn && mouseX < blackPawn.x + 1.5 * size  && mouseX > blackPawn.x  + size/2 && mouseY > blackPawn.y + blackPawn.changePawnB && mouseY < blackPawn.y + blackPawn.changePawnB + size) {
+      blackPawn.blackPawnClicked = true;
     }
     else {
-      blackPawnClicked = false;
+      blackPawn.blackPawnClicked = false;
     }
     
     // Black pawn move 1 square forward
-    if (canMoveB && blackPawnTurn && mouseX < 2 * size  && mouseX > size && mouseY < size * 3 + changePawnB && mouseY > size * 2 + changePawnB) {
-      blackPawnForward += size;
+    if (blackPawn.canMoveB && blackPawnTurn && mouseX < blackPawn.x + 1.5 * size  && mouseX > blackPawn.x + size/2 && mouseY < blackPawn.y + blackPawn.changePawnB + 2 * size && mouseY > blackPawn.y + blackPawn.changePawnB + size) {
+      blackPawn.blackPawnForward += size;
       blackPawnTurn = false;
-      firstMove = false;
+      blackPawn.firstMove = false;
       whitePawnTurn = true;
-      canMoveW = true;
-      canMoveB = false;
-      changePawnB += size;
-      changeCircleB += 1;
+      blackPawn.changePawnB += size;
+      blackPawn.changeCircleB += 1;
+      pawnMoved.play();
     }
-   
+     
     // Black pawn move 2 squares forward only when it's the first move
-    else if (canMoveB && firstMove && blackPawnTurn && mouseX < size * 2 && mouseX > size && mouseY < size * 4 + changePawnB && mouseY > size * 3 + changePawnB) {
-      blackPawnForward += size * 2;
+    else if (blackPawn.canMoveB && blackPawn.firstMove && blackPawnTurn && mouseX < blackPawn.x + 1.5 * size && mouseX > blackPawn.x + size/2 && mouseY < blackPawn.y + blackPawn.changePawnB + size * 3 && mouseY > blackPawn.y + blackPawn.changePawnB + size * 2) {
+      blackPawn.blackPawnForward += size * 2;
       blackPawnTurn = false;
-      firstMove = false;
+      blackPawn.firstMove = false;
       whitePawnTurn = true;
-      canMoveW = true;
-      canMoveB = false;
-      changePawnB += 2 * size;
-      changeCircleB += 1;
+      blackPawn.changePawnB += 2 * size;
+      blackPawn.changeCircleB += 1;
+      pawnMoved.play();
     }
   }
-
 }
 
 // Promotes from pawn to queen when applicable
 function promotion() {
   // White Pawn Promotion
-  if (changePawnW === 6 * size && !whitePromoted && !whitePromoting) {
-    whitePromoting = true;
-    canMoveW = false;
-    canMoveB = false; 
-  }
-
-  if (whitePromoting) {
-    // Display message for white promotion
-    fill("grey");
-    rect(width/2 - size, height/2 - size, 2*size, size);
-    fill("red");
-    text("Press 'p' for queen.", width/2 - size/1.2, height/2 - size/1.7, size*3, size);
-    blackPawnTurn = false;
-    
-    // Promote when p is pressed
-    if (keyIsDown(80)) { 
-      whitePromoting = false;
-      whitePromoted = true;
-      canMoveB = true;    
-      whitePawnTurn = false;
-      blackPawnTurn = true;
+  for (let whitePawn of whitePawnsArray) {
+    if (whitePawn.changePawnW === 6 * size && !whitePawn.whitePromoted && !whitePawn.whitePromoting) {
+      whitePawn.whitePromoting = true;
+      whitePawn.canMoveW = false;
     }
-  }
-
-  // Black Pawn Promotion 
-  if (changePawnB === 6 * size && !blackPromoted && !blackPromoting) {
-    blackPromoting = true;   
-    canMoveB = false;     
-    canMoveW = false;  
-  }
-
-  if (blackPromoting) {
-    // Display message for black promotion
-    fill("grey");
-    rect(width/2 - size, height/2 - size, 2*size, size);
-    fill("red");
-    text("Press 'u' for queen.", width/2 - size/1.2, height/2 - size/1.7, size*3, size);
-    whitePawnTurn = false;
-    
-    // Promote when u is pressed
-    if (keyIsDown(85)) { 
-      blackPromoting = false;
-      blackPromoted = true; 
-      canMoveW = true;  
-      whitePawnTurn = true;
+  
+    if (whitePawn.whitePromoting) {
+      // Display message for white promotion
+      fill("grey");
+      rect(width/2 - size, height/2 - size, 2*size, size);
+      fill("red");
+      text("Press 'p' for queen.", width/2 - size/1.2, height/2 - size/1.7, size*3, size);
       blackPawnTurn = false;
+      
+      // Promote when p is pressed
+      if (keyIsDown(80)) {  
+        whitePawn.whitePromoting = false;
+        whitePawn.whitePromoted = true;   
+        whitePawnTurn = false;
+        blackPawnTurn = true;
+        pawnMoved.play();
+      }
+    }
+
+    // Promote from pawn to queen by changing image
+    if (whitePawn.whitePromoted) {
+      image(whiteQueenImg, whitePawn.x + size/2, whitePawn.y - whitePawn.changePawnW, size, size);
     }
   }
 
-  // Promote from pawn to queen by changing image
-  if (whitePromoted) {
-    image(whiteQueenImg, 0, 0, size, size);
-  }
-  if (blackPromoted) {
-    image(blackQueenImg, size, size * 7, size, size);
+  for (let blackPawn of blackPawnsArray) {
+    // Black Pawn Promotion 
+    if (blackPawn.changePawnB === 6 * size && !blackPawn.blackPromoted && !blackPawn.blackPromoting) {
+      blackPawn.blackPromoting = true;    
+      blackPawn.canMoveB = false;
+    }
+  
+    if (blackPawn.blackPromoting) {
+      // Display message for black promotion
+      fill("grey");
+      rect(width/2 - size, height/2 - size, 2*size, size);
+      fill("red");
+      text("Press 'u' for queen.", width/2 - size/1.2, height/2 - size/1.7, size*3, size);
+      whitePawnTurn = false;
+      
+      // Promote when u is pressed
+      if (keyIsDown(85)) { 
+        blackPawn.blackPromoting = false;
+        blackPawn.blackPromoted = true; 
+        whitePawnTurn = true;
+        blackPawnTurn = false;
+        pawnMoved.play();
+      }
+    }
+    // Promote from pawn to queen by changing image
+    if (blackPawn.blackPromoted) {
+      image(blackQueenImg, blackPawn.x + size/2, blackPawn.y + blackPawn.changePawnB, size, size);
+    }
   }
 }
 
@@ -381,11 +398,21 @@ function showTimer() {
 
 // A timer that decreases for each colour when its their turn and when their time is positive
 function timer() {
-  if((whitePawnTurn || whitePromoting) && timeW >= 0){
-    timeW --;
+  for (let whitePawn of whitePawnsArray) {
+    if(whitePawnTurn && timeW >= 0){
+      timeW -= 1/numberOfPawnsW;
+    }
+    if (whitePawn.whitePromoting && timeW >= 0) {
+      timeW --;
+    }
   }
-  if((blackPawnTurn || blackPromoting) && timeB >= 0) {
-    timeB --;
+  for (let blackPawn of blackPawnsArray) {
+    if(blackPawnTurn && timeB >= 0) {
+      timeB -= 1/numberOfPawnsB;
+    }
+    if (blackPawn.blackPromoting && timeW >= 0) {
+      timeB --;
+    }
   }
 }
 
@@ -402,8 +429,10 @@ function gameOver() {
     // Displays text declaring black as the winner and how to restart
     text("Black wins on time.", width/2- size/1.2, height/2 - size/1.7, size*3, size);
     text("Press R to restart.", width/2- size/1.2, height/1.7 - size/1.7, size*3, size);
-    canMoveW = false;
-    canMoveB = false;
+
+    //Prevents any pawns from moving after the time ends
+    whitePawnTurn = false;
+    blackPawnTurn = false;
   }
   
   // Gives white the win if black runs out of time
@@ -416,33 +445,37 @@ function gameOver() {
     // Displays text declaring white as the winner and how to restart
     text("White wins on time", width/2- size/1.2, height/2 - size/1.7, size*3, size);
     text("Press R to restart.", width/2- size/1.2, height/1.7 - size/1.7, size*3, size);
-    canMoveW = false;
-    canMoveB = false;
+
+    //Prevents any pawns from moving after the time ends
+    whitePawnTurn = false;
+    blackPawnTurn = false;
   }
   
   // Restarts the experience after time runs out for either side and r is clicked 
   if (keyIsDown(82) && (timeB < 0 || timeW < 0)) {
-    whitePawnClicked = false;
-    blackPawnClicked = false;
-    whitePawnForward = 0;
-    blackPawnForward = 0;
-    whitePawnTurn = true;
-    firstMoveW= true;
-    blackPawnTurn = false;
-    canMoveW = false;
-    canMoveB = false;
-    whiteCircleY = 4.5;
-    changePawnW = 0;
-    changePawnB = 0;
-    changeCircleW = 0;
-    changeCircleB = 0;
-    blackCircleY= 2.5;
-    timeW = 30;
-    timeB = 30;
-    whitePromoting = false;
-    blackPromoting = false;
-    whitePromoted = false;
-    blackPromoted = false;
+    for (let whitePawn of whitePawnsArray) {
+      whitePawn.whitePawnClicked = false;
+      whitePawn.whitePawnForward = 0;
+      whitePawnTurn = true;
+      whitePawn.firstMove = true;
+      whitePawn.whiteCircleY = 4.5;
+      whitePawn.changePawnW = 0;
+      whitePawn.changeCircleW = 0;
+      timeW = 30;
+      whitePawn.whitePromoting = false;
+      whitePawn.whitePromoted = false;
+    }
+    for (let blackPawn of blackPawnsArray) {
+      blackPawn.blackPawnClicked = false;
+      blackPawn.blackPawnForward = 0;
+      blackPawn.firstMove = true;
+      blackPawnTurn = false;
+      blackPawn.changePawnB = 0;
+      blackPawn.changeCircleB = 0;
+      blackPawn.blackCircleY= 2.5;
+      timeB = 30;
+      blackPawn.blackPromoting = false;
+      blackPawn.blackPromoted = false;
+    }
   }
 }
-console.log(whitePawnsArray);
