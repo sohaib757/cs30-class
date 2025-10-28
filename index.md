@@ -13,3 +13,4 @@
 ## Assignments
 - [Interactive Scene](interactive-scene)
 - [Arrays and Objects](arrays-objects)
+- [2D Arrays](2darrays)
