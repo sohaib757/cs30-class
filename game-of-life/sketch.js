@@ -6,6 +6,11 @@ let grid;
 let cols;
 let rows;
 let autoPlayIsOn = false;
+let gosper;
+
+function preload() {
+  gosper = loadJSON("gosper.json");
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -30,7 +35,7 @@ function keyPressed() {
     grid = generateEmptyGrid(cols,rows);
   }
   else if (key === " ") {
-    grid = updateGrid();
+    grid = gosper;
   }
   else if (key === "a") {
     autoPlayIsOn = !autoPlayIsOn;

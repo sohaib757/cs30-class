@@ -58,7 +58,7 @@ function setup() {
 
   // Adds no more than 8 pawns to the board
   for (let x = 0; x < 8; x ++) {
-  addPawns();
+    addPawns();
   }
 
   // Sets the volume of background ambience
@@ -127,7 +127,7 @@ function addPawns() {
   whitePawnsArray.push(whitePawn);
   numberOfPawnsW ++;
 
-let blackPawn = {
+  let blackPawn = {
     x: numberOfPawnsB * size - size/2,
     y: size,
     changePawnB: 0,
@@ -178,7 +178,7 @@ function movePawns() {
       whitePawn.canMoveW = true;
     }
   }
-    // Check if black pawn is in first move to determine how many squares it can move
+  // Check if black pawn is in first move to determine how many squares it can move
   for (let blackPawn of blackPawnsArray) {
     if (blackPawn.blackPawnClicked && blackPawn.firstMove) {
       fill("grey");

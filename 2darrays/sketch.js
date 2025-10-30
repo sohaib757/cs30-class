@@ -6,9 +6,11 @@
 // - describe what you did to take this project "above and beyond"
 
 let theGrid = [];
+let whitePawnArray = [];
 let cellSize;
 let cols;
 let rows;
+let numberOfPawns = 0;
 
 function setup() {
   if (windowWidth > windowHeight) {
@@ -17,19 +19,69 @@ function setup() {
   else if (windowHeight > windowWidth) {
     createCanvas(windowWidth, windowWidth);
   }
-  cellSize = width/8
+  cellSize = width/8;
   cols = Math.floor(width/cellSize);
   rows = Math.floor(height/cellSize);
 }
 
-function draw() {
-  background(220);
-  displayGrid();
+function windowResized() {
+  if (windowWidth > windowHeight) {
+    resizeCanvas(windowHeight, windowHeight);
+  }
+  else {
+    resizeCanvas(windowWidth, windowWidth);
+  }
+  cellSize = width/8;
 }
 
-function displayGrid() {
+function draw() {
+  background(220);
+  generateGrid();
+  displayGrid();
+  displayPawns();
+}
+
+function generateGrid() {
+  let isWhite = false;
   for (let y = 0; y < rows; y++) {
     theGrid.push([]);
-    for (let x = 0; x < cols; x++)
+    for (let x = 0; x < cols; x++) {
+      theGrid[y].push(x);  
+    }
   }
 }
+
+
+function displayGrid() {
+  let isWhite = false;
+  for (let y = 0; y < rows; y++) {
+    isWhite = !isWhite;
+    for (let x = 0; x < cols; x++) {
+      if (isWhite) {
+        fill("white");
+      }
+      else if (!isWhite) {
+        fill("black");
+      }
+      square(x * cellSize, y * cellSize, cellSize);
+      isWhite = !isWhite;
+    }
+  }
+}
+
+function pawns() {
+  let whitePawn = {
+    cols: 6,
+    rows: numberOfPawns,
+  };
+  whitePawnArray.push(whitePawn);
+}
+
+function displayPawns() {
+  for (let whitePawn of whitePawnArray) {
+    fill("green");
+    circle(whitePawn.cols, whitePawn.rows, cellSize);
+  } 
+}
+
+console.log(numberOfPawns);
