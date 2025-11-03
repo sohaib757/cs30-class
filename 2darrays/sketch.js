@@ -22,6 +22,10 @@ function setup() {
   cellSize = width/8;
   cols = Math.floor(width/cellSize);
   rows = Math.floor(height/cellSize);
+
+  for (let x = 0; x < 8; x ++) { 
+    pawns();
+  }
 }
 
 function windowResized() {
@@ -39,6 +43,7 @@ function draw() {
   generateGrid();
   displayGrid();
   displayPawns();
+  movePawns();
 }
 
 function generateGrid() {
@@ -71,17 +76,25 @@ function displayGrid() {
 
 function pawns() {
   let whitePawn = {
-    cols: 6,
-    rows: numberOfPawns,
+    cols: numberOfPawns,
+    rows: 6,
   };
   whitePawnArray.push(whitePawn);
+  numberOfPawns +=1;
 }
 
 function displayPawns() {
   for (let whitePawn of whitePawnArray) {
     fill("green");
-    circle(whitePawn.cols, whitePawn.rows, cellSize);
+    circle(whitePawn.cols * cellSize + cellSize/2, whitePawn.rows * cellSize + cellSize/2, cellSize/2);
   } 
 }
 
-console.log(numberOfPawns);
+function mouseClicked() {
+  for (let whitePawn of whitePawnArray) {
+    if (mouseX > whitePawn.cols * cellSize && mouseX < (whitePawn.cols + 1)* cellSize && mouseY < (whitePawn.rows + 1) * cellSize && mouseY > whitePawn.rows * cellSize) {
+      fill("red");
+      circle(whitePawn.cols * cellSize + cellSize/2, (whitePawn.rows - 1) * cellSize + cellSize/2,50);
+    }
+  }
+}

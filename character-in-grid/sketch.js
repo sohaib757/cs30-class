@@ -11,6 +11,13 @@ let thePlayer = {
   x: 0,
   y: 0,
 };
+let grassImg;
+let pathImg;
+
+function preload () {
+  grassImg = loadImage("grass.png");
+  pathImg = loadImage("paving.png");
+}
 
 function setup() {
   createCanvas(windowWidth * 0.9, windowHeight * 0.9);
@@ -54,15 +61,15 @@ function displayGrid() {
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
       if (grid[y][x] === OPEN_TILE) {
-        fill("white");
+        image(pathImg, x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE);
       }
       else if (grid[y][x] === IMPASSIBLE) {
-        fill("green");
+        image(grassImg, x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE);
       }
       else if (grid[y][x] === PLAYER) {
         fill("red");
+        square(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE);
       }
-      square(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE);
     }
   }
 }
