@@ -7,10 +7,13 @@
 
 let theGrid = [];
 let whitePawnArray = [];
+let blackPawnArray = [];
 let cellSize;
 let cols;
 let rows;
 let numberOfPawns = 0;
+let blackTurn = false;
+let whiteTurn = true;
 
 function setup() {
   if (windowWidth > windowHeight) {
@@ -56,7 +59,6 @@ function generateGrid() {
   }
 }
 
-
 function displayGrid() {
   let isWhite = false;
   for (let y = 0; y < rows; y++) {
@@ -78,8 +80,17 @@ function pawns() {
   let whitePawn = {
     cols: numberOfPawns,
     rows: 6,
+    pawnSelected: false,
+    canMove: false,
   };
   whitePawnArray.push(whitePawn);
+  let blackPawn = {
+    cols: numberOfPawns,
+    rows: 1,
+    pawnSelected: false,
+    canMove: false,
+  };
+  blackPawnArray.push(blackPawn);
   numberOfPawns +=1;
 }
 
@@ -88,13 +99,56 @@ function displayPawns() {
     fill("green");
     circle(whitePawn.cols * cellSize + cellSize/2, whitePawn.rows * cellSize + cellSize/2, cellSize/2);
   } 
+  for (let blackPawn of blackPawnArray) {
+    fill("green");
+    circle(blackPawn.cols * cellSize + cellSize/2, blackPawn.rows * cellSize + cellSize/2, cellSize/2);
+  } 
 }
 
 function mouseClicked() {
   for (let whitePawn of whitePawnArray) {
-    if (mouseX > whitePawn.cols * cellSize && mouseX < (whitePawn.cols + 1)* cellSize && mouseY < (whitePawn.rows + 1) * cellSize && mouseY > whitePawn.rows * cellSize) {
+    if (whiteTurn && mouseX > whitePawn.cols * cellSize && mouseX < (whitePawn.cols + 1)* cellSize && mouseY < (whitePawn.rows + 1) * cellSize && mouseY > whitePawn.rows * cellSize) {
+      whitePawn.pawnSelected = true;
+    }
+    else {
+      whitePawn.pawnSelected = false;
+    }
+    if (whiteTurn && whitePawn.canMove && mouseX > whitePawn.cols * cellSize && mouseX < (whitePawn.cols + 1) * cellSize && mouseY < whitePawn.rows * cellSize && mouseY > ( whitePawn.rows - 1)* cellSize) {
+      whitePawn.rows -= 1;
+      whitePawn.canMove = false;
+      blackTurn = true;
+      whiteTurn = false;
+    }
+  }
+  for (let blackPawn of blackPawnArray) {
+    if (blackTurn && mouseX > blackPawn.cols * cellSize && mouseX < (blackPawn.cols + 1)* cellSize && mouseY < (blackPawn.rows + 1) * cellSize && mouseY > blackPawn.rows * cellSize) {
+      blackPawn.pawnSelected = true;
+    }
+    else {
+      blackPawn.pawnSelected = false;
+    }
+    if (blackTurn && blackPawn.canMove && mouseX > blackPawn.cols * cellSize && mouseX < (blackPawn.cols + 1) * cellSize && mouseY < (blackPawn.rows + 2)* cellSize && mouseY > (blackPawn.rows + 1) * cellSize) {
+      blackPawn.rows += 1;
+      blackPawn.canMove = false;
+      whiteTurn = true;
+      blackTurn = false;
+    }
+  }
+}
+
+function movePawns() {
+  for (let whitePawn of whitePawnArray) {
+    if (whitePawn.pawnSelected) {
       fill("red");
       circle(whitePawn.cols * cellSize + cellSize/2, (whitePawn.rows - 1) * cellSize + cellSize/2,50);
+      whitePawn.canMove = true;
+    }
+  }
+  for (let blackPawn of blackPawnArray) {
+    if (blackPawn.pawnSelected) {
+      fill("red");
+      circle(blackPawn.cols * cellSize + cellSize/2, (blackPawn.rows + 1) * cellSize + cellSize/2,50);
+      blackPawn.canMove = true;
     }
   }
 }
