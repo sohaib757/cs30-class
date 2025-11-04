@@ -8,12 +8,19 @@
 let theGrid = [];
 let whitePawnArray = [];
 let blackPawnArray = [];
+let whitePawnImg;
+let blackPawnImg;
 let cellSize;
 let cols;
 let rows;
 let numberOfPawns = 0;
 let blackTurn = false;
 let whiteTurn = true;
+
+function preload() {
+  whitePawnImg = loadImage("whitepawn.png");
+  blackPawnImg = loadImage("blackpawn.png");
+}
 
 function setup() {
   if (windowWidth > windowHeight) {
@@ -97,11 +104,11 @@ function pawns() {
 function displayPawns() {
   for (let whitePawn of whitePawnArray) {
     fill("green");
-    circle(whitePawn.cols * cellSize + cellSize/2, whitePawn.rows * cellSize + cellSize/2, cellSize/2);
+    image(whitePawnImg, whitePawn.cols * cellSize - cellSize/2, whitePawn.rows * cellSize, cellSize*2, cellSize);
   } 
   for (let blackPawn of blackPawnArray) {
     fill("green");
-    circle(blackPawn.cols * cellSize + cellSize/2, blackPawn.rows * cellSize + cellSize/2, cellSize/2);
+    image(blackPawnImg, blackPawn.cols * cellSize - cellSize/2, blackPawn.rows * cellSize, cellSize*2, cellSize);
   } 
 }
 
@@ -143,12 +150,28 @@ function movePawns() {
       circle(whitePawn.cols * cellSize + cellSize/2, (whitePawn.rows - 1) * cellSize + cellSize/2,50);
       whitePawn.canMove = true;
     }
+    else {
+      whitePawn.canMove = false;
+    }
   }
   for (let blackPawn of blackPawnArray) {
     if (blackPawn.pawnSelected) {
       fill("red");
       circle(blackPawn.cols * cellSize + cellSize/2, (blackPawn.rows + 1) * cellSize + cellSize/2,50);
       blackPawn.canMove = true;
+    }
+    else {
+      blackPawn.canMove = false;
+    }
+  }
+  for (let whitePawn of whitePawnArray) {
+    for (let blackPawn of blackPawnArray) {
+      if (whitePawn.cols === blackPawn.cols && whitePawn.rows - 1 === blackPawn.rows) {
+        whitePawn.canMove = false;
+      }
+      if (blackPawn.cols === whitePawn.cols && blackPawn.rows + 1 === whitePawn.rows) {
+        blackPawn.canMove = false;
+      }
     }
   }
 }
