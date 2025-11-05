@@ -54,6 +54,7 @@ function draw() {
   displayGrid();
   displayPawns();
   movePawns();
+  console.log(whitePawnArray);
 }
 
 function generateGrid() {
@@ -89,6 +90,9 @@ function pawns() {
     rows: 6,
     pawnSelected: false,
     canMove: false,
+    circleShow: true,
+    canCaptureRight: false,
+    canCaptureLeft: false,
   };
   whitePawnArray.push(whitePawn);
   let blackPawn = {
@@ -96,6 +100,9 @@ function pawns() {
     rows: 1,
     pawnSelected: false,
     canMove: false,
+    circleShow: true,
+    canCaptureRight: false,
+    canCaptureLeft: false,
   };
   blackPawnArray.push(blackPawn);
   numberOfPawns +=1;
@@ -103,11 +110,9 @@ function pawns() {
 
 function displayPawns() {
   for (let whitePawn of whitePawnArray) {
-    fill("green");
     image(whitePawnImg, whitePawn.cols * cellSize - cellSize/2, whitePawn.rows * cellSize, cellSize*2, cellSize);
   } 
   for (let blackPawn of blackPawnArray) {
-    fill("green");
     image(blackPawnImg, blackPawn.cols * cellSize - cellSize/2, blackPawn.rows * cellSize, cellSize*2, cellSize);
   } 
 }
@@ -141,11 +146,23 @@ function mouseClicked() {
       blackTurn = false;
     }
   }
+  for (let whitePawn of whitePawnArray) {
+    for (let blackPawn of blackPawnArray) {
+      if(whiteTurn && whitePawn.canMove && whitePawn.canCaptureRight && mouseX < (whitePawn.cols + 2) * cellSize && mouseX > (whitePawn.cols + 1) * cellSize && mouseY < whitePawn.rows * cellSize && mouseY > (whitePawn.rows - 1) * cellSize) {
+        blackPawnArray.splice(whitePawn.rows, 1);
+        whitePawn.cols += 1;
+        whitePawn.rows -= 1;
+        whitePawn.canMove = false;
+        blackTurn = true;
+        whiteTurn = false;
+      }
+    }
+  }
 }
 
 function movePawns() {
   for (let whitePawn of whitePawnArray) {
-    if (whitePawn.pawnSelected) {
+    if (whitePawn.pawnSelected && whitePawn.circleShow) {
       fill("red");
       circle(whitePawn.cols * cellSize + cellSize/2, (whitePawn.rows - 1) * cellSize + cellSize/2,50);
       whitePawn.canMove = true;
@@ -155,7 +172,7 @@ function movePawns() {
     }
   }
   for (let blackPawn of blackPawnArray) {
-    if (blackPawn.pawnSelected) {
+    if (blackPawn.pawnSelected && blackPawn.circleShow) {
       fill("red");
       circle(blackPawn.cols * cellSize + cellSize/2, (blackPawn.rows + 1) * cellSize + cellSize/2,50);
       blackPawn.canMove = true;
@@ -168,9 +185,17 @@ function movePawns() {
     for (let blackPawn of blackPawnArray) {
       if (whitePawn.cols === blackPawn.cols && whitePawn.rows - 1 === blackPawn.rows) {
         whitePawn.canMove = false;
+        whitePawn.circleShow = false;
       }
       if (blackPawn.cols === whitePawn.cols && blackPawn.rows + 1 === whitePawn.rows) {
         blackPawn.canMove = false;
+        blackPawn.circleShow = false;
+      }
+      if (whitePawn.cols === blackPawn.cols + 1 && whitePawn.rows - 1 === blackPawn.rows) {
+        whitePawn.canCaptureLeft = true;
+      }
+      else if (whitePawn.cols === blackPawn.cols - 1 && whitePawn.rows - 1 === blackPawn.rows) {
+        whitePawn.canCaptureRight = true;
       }
     }
   }
