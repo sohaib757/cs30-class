@@ -90,9 +90,7 @@ function pawns() {
     rows: 6,
     pawnSelected: false,
     canMove: false,
-    circleShow: true,
-    canCaptureRight: false,
-    canCaptureLeft: false,
+    firstMove: true,
   };
   whitePawnArray.push(whitePawn);
   let blackPawn = {
@@ -100,9 +98,7 @@ function pawns() {
     rows: 1,
     pawnSelected: false,
     canMove: false,
-    circleShow: true,
-    canCaptureRight: false,
-    canCaptureLeft: false,
+    firstMove: true,
   };
   blackPawnArray.push(blackPawn);
   numberOfPawns +=1;
@@ -134,27 +130,82 @@ function clickPawns(x,y) {
       whitePawn.pawnSelected = false;
     }
   }
+  for (let blackPawn of blackPawnArray){
+    if (x === blackPawn.cols && y === blackPawn.rows){
+      blackPawn.pawnSelected = true;
+    }
+    else {
+      blackPawn.pawnSelected = false;
+    }
+  }
 }
 
 function movePawns(x,y) {
   for (let whitePawn of whitePawnArray) {
-    if (whitePawn.canMove && x === whitePawn.cols && y === whitePawn.rows - 1) {
+    if(whitePawn.firstMove && whitePawn.canMove && x === whitePawn.cols && y === whitePawn.rows - 2) {
+      whitePawn.rows -= 2;
+      whiteTurn = false;
+      blackTurn = true;
+      whitePawn.firstMove = false;
+    }
+    else if (whitePawn.canMove && x === whitePawn.cols && y === whitePawn.rows - 1) {
       whitePawn.rows -= 1;
       whiteTurn = false;
+      blackTurn = true;
+      whitePawn.firstMove = false;
+    }
+  }
+  for (let blackPawn of blackPawnArray) {
+    if(blackPawn.firstMove && blackPawn.canMove && x === blackPawn.cols && y === blackPawn.rows + 2) {
+      blackPawn.rows += 2;
+      blackTurn = false;
+      whiteTurn = true;
+      blackPawn.firstMove = false;
+    }
+    else if (blackPawn.canMove && x === blackPawn.cols && y === blackPawn.rows +1) {
+      blackPawn.rows += 1;
+      blackTurn = false;
+      whiteTurn = true;
+      blackPawn.firstMove = false;
     }
   }
 }
 
 function displayPossibleMoves() {
   for (let whitePawn of whitePawnArray) {
-    if (whiteTurn && whitePawn.pawnSelected) {
-      noStroke();
-      fill("grey");
-      circle(whitePawn.cols * cellSize + cellSize/2, whitePawn.rows * cellSize - cellSize/2, 50);
-      whitePawn.canMove = true;
-    }
-    else {
-      whitePawn.canMove = false;
+    for (let blackPawn of blackPawnArray) {
+      if (whiteTurn && whitePawn.pawnSelected && whitePawn.firstMove) {
+        noStroke();
+        fill("grey");
+        circle(whitePawn.cols * cellSize + cellSize/2, whitePawn.rows * cellSize - cellSize/2, cellSize/4);
+        circle(whitePawn.cols * cellSize + cellSize/2, (whitePawn.rows - 1) * cellSize - cellSize/2, cellSize/4);
+        whitePawn.canMove = true;
+      }
+      else if (whiteTurn && whitePawn.pawnSelected) {
+        noStroke();
+        fill("grey");
+        circle(whitePawn.cols * cellSize + cellSize/2, whitePawn.rows * cellSize - cellSize/2, cellSize/4);
+        whitePawn.canMove = true;
+      }
+      else {
+        whitePawn.canMove = false;
+      }
+      if (blackTurn && blackPawn.pawnSelected && blackPawn.firstMove) {
+        noStroke();
+        fill("grey");
+        circle(blackPawn.cols * cellSize + cellSize/2, (blackPawn.rows + 2) * cellSize - cellSize/2, cellSize/4);
+        circle(blackPawn.cols * cellSize + cellSize/2, (blackPawn.rows + 3) * cellSize - cellSize/2, cellSize/4);
+        blackPawn.canMove = true;
+      }
+      else if (blackTurn && blackPawn.pawnSelected) {
+        noStroke();
+        fill("grey");
+        circle(blackPawn.cols * cellSize + cellSize/2, (blackPawn.rows + 2) * cellSize - cellSize/2, cellSize/4);
+        blackPawn.canMove = true;
+      }
+      else {
+        blackPawn.canMove = false;
+      }
     }
   }
 }
