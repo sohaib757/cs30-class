@@ -54,7 +54,7 @@ function draw() {
   background(220);
   displayGrid();
   displayPawns();
-  displayPossibleMoves()
+  displayPossibleMoves();
 }
 
 function generateGrid() {
