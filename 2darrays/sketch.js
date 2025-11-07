@@ -142,31 +142,31 @@ function clickPawns(x,y) {
 
 function movePawns(x,y) {
   for (let whitePawn of whitePawnArray) {
-    if(whitePawn.firstMove && whitePawn.canMove && x === whitePawn.cols && y === whitePawn.rows - 2) {
-      whitePawn.rows -= 2;
-      whiteTurn = false;
-      blackTurn = true;
-      whitePawn.firstMove = false;
-    }
-    else if (whitePawn.canMove && x === whitePawn.cols && y === whitePawn.rows - 1) {
-      whitePawn.rows -= 1;
-      whiteTurn = false;
-      blackTurn = true;
-      whitePawn.firstMove = false;
-    }
-  }
-  for (let blackPawn of blackPawnArray) {
-    if(blackPawn.firstMove && blackPawn.canMove && x === blackPawn.cols && y === blackPawn.rows + 2) {
-      blackPawn.rows += 2;
-      blackTurn = false;
-      whiteTurn = true;
-      blackPawn.firstMove = false;
-    }
-    else if (blackPawn.canMove && x === blackPawn.cols && y === blackPawn.rows +1) {
-      blackPawn.rows += 1;
-      blackTurn = false;
-      whiteTurn = true;
-      blackPawn.firstMove = false;
+    for (let blackPawn of blackPawnArray) {
+      if(whitePawn.firstMove && whitePawn.canMove && x === whitePawn.cols && y === whitePawn.rows - 2 && whitePawn.cols === blackPawn.cols && whitePawn.rows - 2 !== blackPawn.rows) {
+        whitePawn.rows -= 2;
+        whiteTurn = false;
+        blackTurn = true;
+        whitePawn.firstMove = false;
+      }
+      else if (whitePawn.canMove && x === whitePawn.cols && y === whitePawn.rows - 1 && whitePawn.cols === blackPawn.cols && whitePawn.rows - 1 !== blackPawn.rows) {
+        whitePawn.rows -= 1;
+        whiteTurn = false;
+        blackTurn = true;
+        whitePawn.firstMove = false;
+      }
+      if(blackPawn.firstMove && blackPawn.canMove && x === blackPawn.cols && y === blackPawn.rows + 2 && whitePawn.cols === blackPawn.cols && blackPawn.rows + 2 !== whitePawn.rows) {
+        blackPawn.rows += 2;
+        blackTurn = false;
+        whiteTurn = true;
+        blackPawn.firstMove = false;
+      }
+      else if (blackPawn.canMove && x === blackPawn.cols && y === blackPawn.rows + 1 && whitePawn.cols === blackPawn.cols && blackPawn.rows + 1 !== whitePawn.rows) {
+        blackPawn.rows += 1;
+        blackTurn = false;
+        whiteTurn = true;
+        blackPawn.firstMove = false;
+      }
     }
   }
 }
