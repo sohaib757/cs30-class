@@ -180,7 +180,7 @@ function movePawns(x,y) {
         whitePawn.firstMove = false;
       }
       // Checks if white pawn can capture a black pawn
-      else if (whitePawn.canMove && (x === whitePawn.cols + 1 || x === whitePawn.cols - 1) && emptySquare(x, whitePawn.rows - 1) === "black"){
+      else if (whitePawn.canMove && (x === whitePawn.cols + 1 || x === whitePawn.cols - 1) && y === whitePawn.rows - 1 && emptySquare(x, whitePawn.rows - 1) === "black"){
         whitePawn.cols = x;
         whitePawn.rows -= 1;
         whitePawn.rows = constrain(whitePawn.rows, 0, 7);
@@ -242,6 +242,12 @@ function displayPossibleMoves() {
         fill("grey");
         circle(whitePawn.cols * cellSize + cellSize/2, whitePawn.rows * cellSize - cellSize/2, cellSize/4);
         whitePawn.canMove = true;
+      }
+      // Displays a circle indicating that the white pawn can capture a black one
+      else if (whiteTurn && whitePawn.pawnSelected && emptySquare(whitePawn.cols - 1, whitePawn.rows - 1) === "black") {
+        noStroke();
+        fill("grey");
+        circle((whitePawn.cols - 1) * cellSize + cellSize/2, whitePawn.rows * cellSize - cellSize/2, cellSize/4);
       }
       else {
         whitePawn.canMove = false;
