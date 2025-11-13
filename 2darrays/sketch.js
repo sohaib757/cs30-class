@@ -232,6 +232,9 @@ function movePawns(x,y) {
 
 // Checks whether or not squares are empty or occupied by a pawn and if so which colour
 function checkSquare(x,y) {
+  if (x < 0 || x > 7 || y < 0 || y > 7) { 
+    return "out of grid";
+  }
   for (let row = 0; row < rows; row ++) {
     for (let col = 0; col < cols ; col ++) {
       theGrid[row][col] = "empty";
@@ -293,7 +296,7 @@ function displayPossibleMoves() {
         circle((whitePawn.cols - 1) * cellSize + cellSize/2, whitePawn.rows * cellSize - cellSize/2, cellSize/4);
         whitePawn.canMove = true;
       }
-       // Displays two circles when white pawn can both move forward and capture right
+      // Displays two circles when white pawn can both move forward and capture right
       else if (whiteTurn && whitePawn.pawnSelected && checkSquare(whitePawn.cols + 1, whitePawn.rows - 1) === "black" && checkSquare(whitePawn.cols, whitePawn.rows - 1) === "empty") {
         circle(whitePawn.cols * cellSize + cellSize/2, whitePawn.rows * cellSize - cellSize/2, cellSize/4);
         circle((whitePawn.cols + 1) * cellSize + cellSize/2, whitePawn.rows * cellSize - cellSize/2, cellSize/4);
@@ -304,7 +307,7 @@ function displayPossibleMoves() {
         circle((whitePawn.cols - 1) * cellSize + cellSize/2, whitePawn.rows * cellSize - cellSize/2, cellSize/4);
         whitePawn.canMove = true;
       }
-       // Displays one circle when white pawn can capture right
+      // Displays one circle when white pawn can capture right
       else if (whiteTurn && whitePawn.pawnSelected && checkSquare(whitePawn.cols + 1, whitePawn.rows - 1) === "black") {
         circle((whitePawn.cols + 1) * cellSize + cellSize/2, whitePawn.rows * cellSize - cellSize/2, cellSize/4);
         whitePawn.canMove = true;
@@ -364,7 +367,7 @@ function displayPossibleMoves() {
         circle((blackPawn.cols - 1) * cellSize + cellSize/2, (blackPawn.rows + 2) * cellSize - cellSize/2, cellSize/4);
         blackPawn.canMove = true;
       }
-       // Displays two circles when black pawn can both move forward and capture right
+      // Displays two circles when black pawn can both move forward and capture right
       else if (blackTurn && blackPawn.pawnSelected && checkSquare(blackPawn.cols + 1, blackPawn.rows + 1) === "white" && checkSquare(blackPawn.cols, blackPawn.rows + 1) === "empty") {
         circle(blackPawn.cols * cellSize + cellSize/2, (blackPawn.rows + 2) * cellSize - cellSize/2, cellSize/4);
         circle((blackPawn.cols + 1) * cellSize + cellSize/2, (blackPawn.rows + 2) * cellSize - cellSize/2, cellSize/4);
@@ -375,7 +378,7 @@ function displayPossibleMoves() {
         circle((blackPawn.cols - 1) * cellSize + cellSize/2, (blackPawn.rows + 2)* cellSize - cellSize/2, cellSize/4);
         blackPawn.canMove = true;
       }
-       // Displays one circle when black pawn can capture right
+      // Displays one circle when black pawn can capture right
       else if (blackTurn && blackPawn.pawnSelected && checkSquare(blackPawn.cols + 1, blackPawn.rows + 1) === "white") {
         circle((blackPawn.cols + 1) * cellSize + cellSize/2, (blackPawn.rows + 2) * cellSize - cellSize/2, cellSize/4);
         blackPawn.canMove = true;
