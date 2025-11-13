@@ -261,7 +261,7 @@ function displayPossibleMoves() {
         whitePawn.canMove = true;
       }
       // Displays three circle when white pawn can move forward once and capture both left and right
-      else if (whiteTurn && whitePawn.pawnSelected && whitePawn.firstMove && checkSquare(whitePawn.cols + 1, whitePawn.rows - 1) === "black" && checkSquare(whitePawn.cols - 1, whitePawn.rows - 1) === "black" && checkSquare(whitePawn.cols, whitePawn.rows - 1) === "empty") {
+      else if (whiteTurn && whitePawn.pawnSelected && checkSquare(whitePawn.cols + 1, whitePawn.rows - 1) === "black" && checkSquare(whitePawn.cols - 1, whitePawn.rows - 1) === "black" && checkSquare(whitePawn.cols, whitePawn.rows - 1) === "empty") {
         circle(whitePawn.cols * cellSize + cellSize/2, whitePawn.rows * cellSize - cellSize/2, cellSize/4);
         circle((whitePawn.cols - 1) * cellSize + cellSize/2, whitePawn.rows * cellSize - cellSize/2, cellSize/4);
         circle((whitePawn.cols + 1) * cellSize + cellSize/2, whitePawn.rows * cellSize - cellSize/2, cellSize/4);
@@ -282,7 +282,7 @@ function displayPossibleMoves() {
         whitePawn.canMove = true;
       }
       // Displays two circles when white pawn can capture both left and right
-      else if (whiteTurn && whitePawn.pawnSelected && checkSquare(whitePawn.cols - 1, whitePawn.rows - 1) === "white" && checkSquare(whitePawn.cols + 1, whitePawn.rows - 1) === "white") {
+      else if (whiteTurn && whitePawn.pawnSelected && checkSquare(whitePawn.cols - 1, whitePawn.rows - 1) === "black" && checkSquare(whitePawn.cols + 1, whitePawn.rows - 1) === "black") {
         circle((whitePawn.cols - 1) * cellSize + cellSize/2, whitePawn.rows * cellSize - cellSize/2, cellSize/4);
         circle((whitePawn.cols + 1) * cellSize + cellSize/2, whitePawn.rows * cellSize - cellSize/2, cellSize/4);
         whitePawn.canMove = true;
@@ -325,14 +325,14 @@ function displayPossibleMoves() {
       }
       // Displays four circles when black pawn can move forward twice and capture left and right
       if (blackTurn && blackPawn.pawnSelected && blackPawn.firstMove && checkSquare(blackPawn.cols + 1, blackPawn.rows + 1) === "white" && checkSquare(blackPawn.cols - 1, blackPawn.rows + 1) === "white" && checkSquare(blackPawn.cols, blackPawn.rows + 1) === "empty" && checkSquare(blackPawn.cols, blackPawn.rows + 2) === "empty") {
-        circle(blackPawn.cols * cellSize + cellSize/2, blackPawn.rows * cellSize - cellSize/2, cellSize/4);
+        circle(blackPawn.cols * cellSize + cellSize/2, (blackPawn.rows + 2) * cellSize - cellSize/2, cellSize/4);
         circle(blackPawn.cols * cellSize + cellSize/2, (blackPawn.rows + 3) * cellSize - cellSize/2, cellSize/4);
         circle((blackPawn.cols - 1) * cellSize + cellSize/2, (blackPawn.rows + 2) * cellSize - cellSize/2, cellSize/4);
         circle((blackPawn.cols + 1) * cellSize + cellSize/2, (blackPawn.rows + 2) * cellSize - cellSize/2, cellSize/4);
         blackPawn.canMove = true;
       }
       // Displays three circle when black pawn can move forward once and capture both left and right
-      else if (blackTurn && blackPawn.pawnSelected && blackPawn.firstMove && checkSquare(blackPawn.cols + 1, blackPawn.rows + 1) === "white" && checkSquare(blackPawn.cols - 1, blackPawn.rows + 1) === "white" && checkSquare(blackPawn.cols, blackPawn.rows + 1) === "empty") {
+      else if (blackTurn && blackPawn.pawnSelected && checkSquare(blackPawn.cols + 1, blackPawn.rows + 1) === "white" && checkSquare(blackPawn.cols - 1, blackPawn.rows + 1) === "white" && checkSquare(blackPawn.cols, blackPawn.rows + 1) === "empty") {
         circle(blackPawn.cols * cellSize + cellSize/2, (blackPawn.rows + 2) * cellSize - cellSize/2, cellSize/4);
         circle((blackPawn.cols - 1) * cellSize + cellSize/2, (blackPawn.rows + 2) * cellSize - cellSize/2, cellSize/4);
         circle((blackPawn.cols + 1) * cellSize + cellSize/2, (blackPawn.rows + 2) * cellSize - cellSize/2, cellSize/4);
